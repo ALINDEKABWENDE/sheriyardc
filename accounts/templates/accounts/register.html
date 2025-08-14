@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}Créer un profil professionnel{% endblock %}
+
+{% block content %}
+<style>
+  .register-container {
+    max-width: 720px;
+    margin: 100px auto;
+    background-color: #ffffff;
+    padding: 40px 30px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.08);
+    border-radius: 12px;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .register-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #27496d;
+    font-weight: 600;
+  }
+
+  label {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+
+  input[type="file"] {
+    padding: 10px;
+    background-color: #f1f1f1;
+  }
+
+  button {
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  .error {
+    background-color: #ffe3e3;
+    border: 1px solid #ffb0b0;
+    color: #d8000c;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .bi {
+    margin-right: 6px;
+    color: #007bff;
+  }
+</style>
+
+<div class="register-container">
+  <h2><i class="bi bi-person-badge-fill"></i> Créer un profil professionnel</h2>
+
+  {% if error %}
+    <div class="error"><i class="bi bi-exclamation-circle-fill"></i> {{ error }}</div>
+  {% endif %}
+
+  <form method="post" action="{% url 'accounts:register_juriste' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label><i class="bi bi-person-fill"></i>Nom complet :</label>
+    <input type="text" name="full_name" required value="{{ request.POST.full_name }}">
+
+    <label><i class="bi bi-gender-ambiguous"></i>Sexe :</label>
+    <select name="sexe" required>
+      <option value="">-- Sélectionner --</option>
+      <option value="M" {% if request.POST.sexe == "M" %}selected{% endif %}>Masculin</option>
+      <option value="F" {% if request.POST.sexe == "F" %}selected{% endif %}>Féminin</option>
+      <option value="A" {% if request.POST.sexe == "A" %}selected{% endif %}>Autre</option>
+    </select>
+
+    <label><i class="bi bi-calendar-date"></i>Date de naissance :</label>
+    <input type="date" name="date_naissance" value="{{ request.POST.date_naissance }}">
+
+    <label><i class="bi bi-award-fill"></i>Profession :</label>
+    <select name="profession" required>
+      <option value="">-- Sélectionner --</option>
+      {% for p in professions %}
+        <option value="{{ p }}" {% if request.POST.profession == p %}selected{% endif %}>{{ p }}</option>
+      {% endfor %}
+    </select>
+
+    <label><i class="bi bi-lightbulb"></i>Spécialité juridique :</label>
+    <input type="text" name="speciality" value="{{ request.POST.speciality }}" placeholder="Ex: Droit commercial, droit foncier...">
+
+    <label><i class="bi bi-geo-alt-fill"></i>Ville d'exercice :</label>
+    <input type="text" name="city" required value="{{ request.POST.city }}">
+
+    <label><i class="bi bi-building"></i>Cabinet ou institution :</label>
+    <input type="text" name="institution" value="{{ request.POST.institution }}">
+
+    <label><i class="bi bi-pencil-fill"></i>Présentation / expérience :</label>
+    <textarea name="bio" rows="4">{{ request.POST.bio }}</textarea>
+
+    <label><i class="bi bi-envelope-fill"></i>Email professionnel :</label>
+    <input type="email" name="email" value="{{ request.POST.email }}">
+
+    <label><i class="bi bi-camera-fill"></i>Photo professionnelle :</label>
+    <input type="file" name="photo">
+
+    <label><i class="bi bi-lock-fill"></i>Mot de passe :</label>
+    <input type="password" name="password" required>
+
+    <button type="submit"><i class="bi bi-check-circle-fill"></i> Créer le profil</button>
+  </form>
+</div>
+{% endblock %}

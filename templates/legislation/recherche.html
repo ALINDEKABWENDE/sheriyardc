@@ -1,0 +1,88 @@
+{% block content %}
+
+<style>
+  /* STYLE DU FORMULAIRE DE RECHERCHE */
+  .search-container {
+    background-color: #e9f1f7;
+    border: 1px solid #cbd6e2;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  .search-container input[type="text"] {
+    max-width: 500px;
+    margin: auto;
+    border: 1px solid #aaa;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    transition: box-shadow 0.3s ease;
+  }
+  .search-container input[type="text"]:focus {
+    box-shadow: 0 0 8px rgba(33,150,243,0.4);
+    outline: none;
+  }
+
+  /* STYLE DE LA LISTE DES RÉSULTATS */
+  .results-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .list-group-item {
+    background-color: #fdfdfd;
+    border-left: 6px solid #0077b6;
+    border-radius: 0.5rem;
+    margin-bottom: 0.8rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;
+  }
+  .list-group-item:hover {
+    transform: scale(1.02);
+    background-color: #f1faff;
+  }
+  .list-group-item strong {
+    color: #023e8a;
+    font-size: 1.1rem;
+  }
+
+  .list-group-item small {
+    color: #777;
+  }
+
+  .empty-result {
+    background-color: #fff4f4;
+    border-left: 6px solid #dc3545;
+    padding: 1rem;
+    font-weight: bold;
+    color: #a00;
+    text-align: center;
+    border-radius: 0.5rem;
+  }
+</style>
+
+<!-- FORMULAIRE DE RECHERCHE -->
+<div class="search-container">
+  <form method="get">
+    <input type="text" name="q" placeholder="Recherche juridique..." class="form-control">
+  </form>
+</div>
+
+<!-- RÉSULTATS -->
+<div class="results-title">📚 Résultats juridiques</div>
+<ul class="list-group">
+  {% for loi in resultats %}
+    <li class="list-group-item">
+      <strong>{{ loi.titre }}</strong><br>
+      <small>Domaine : {{ loi.domaine }}</small>
+    </li>
+  {% empty %}
+    <li class="empty-result">Aucune correspondance trouvée.</li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

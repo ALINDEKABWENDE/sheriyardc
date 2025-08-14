@@ -1,0 +1,92 @@
+<style>
+  /* Carte globale */
+  .question-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  .question-card:hover {
+    transform: translateY(-3px);
+  }
+
+  /* En-tête */
+  .question-card-header {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 12px 20px;
+  }
+
+  /* Liste */
+  .question-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  .question-list li {
+    padding: 15px;
+    border-bottom: 1px solid #f0f0f0;
+    position: relative;
+  }
+  .question-list li:last-child {
+    border-bottom: none;
+  }
+
+  /* Badges */
+  .badge-success {
+    background: #28a745;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+  }
+  .badge-pending {
+    background: #ffc107;
+    color: #333;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+  }
+
+  /* Texte vide */
+  .question-empty {
+    color: #888;
+    font-style: italic;
+  }
+
+  /* Responsive */
+  @media (max-width: 576px) {
+    .question-card-header {
+      font-size: 1rem;
+      text-align: center;
+    }
+    .badge-success,
+    .badge-pending {
+      display: block;
+      margin-top: 8px;
+      text-align: center;
+    }
+  }
+</style>
+
+<!-- Questions -->
+<div class="card mb-4 question-card">
+  <div class="question-card-header">📌 Mes Questions</div>
+  <ul class="question-list">
+    {% for q in questions %}
+    <li>
+      <strong>{{ q.titre }}</strong> <br>
+      <small class="text-muted">Posée le {{ q.created_at|date:"d M Y" }}</small>
+      {% if q.reponse %}
+        <span class="badge-success float-end">Réponse reçue</span>
+      {% else %}
+        <span class="badge-pending float-end">En attente</span>
+      {% endif %}
+    </li>
+    {% empty %}
+    <li class="question-empty">Aucune question posée.</li>
+    {% endfor %}
+  </ul>
+</div>

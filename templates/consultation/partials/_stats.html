@@ -1,0 +1,56 @@
+<!-- Statistiques -->
+<style>
+  .stats-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+
+  .stats-card .card-body {
+    padding: 20px;
+  }
+
+  .stats-card h5 {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #555;
+  }
+
+  .stats-card p {
+    font-size: 2.2rem;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  /* Couleurs harmonisées */
+  .border-primary { border: 2px solid #007bff !important; }
+  .border-success { border: 2px solid #28a745 !important; }
+  .border-warning { border: 2px solid #ffc107 !important; }
+  .border-info { border: 2px solid #17a2b8 !important; }
+  .border-danger { border: 2px solid #dc3545 !important; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .stats-card {
+      margin-bottom: 15px;
+    }
+  }
+</style>
+
+<div class="row mb-4">
+  {% for stat in stats %}
+  <div class="col-md-4 col-sm-6 col-12">
+    <div class="card stats-card border-{{ stat.color }}">
+      <div class="card-body text-center">
+        <h5 class="card-title">{{ stat.label }}</h5>
+        <p class="text-{{ stat.color }}">{{ stat.value }}</p>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>

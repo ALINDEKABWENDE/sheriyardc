@@ -1,0 +1,314 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  @import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css');
+
+  /* Container principal */
+  .dossiers-container {
+    max-width: 960px;
+    margin: 3rem auto 5rem;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 24px 48px rgba(0,0,0,0.12);
+    padding: 3.5rem 4rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #2c3e50;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .dossiers-container:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 36px 72px rgba(0,0,0,0.2);
+  }
+
+  /* Header stylé façon bandeau */
+  .page-header {
+    font-size: 3rem;
+    font-weight: 800;
+    text-align: center;
+    color: #005c97;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-bottom: 2.5rem;
+    position: relative;
+  }
+  .page-header::after {
+    content: '';
+    display: block;
+    width: 130px;
+    height: 8px;
+    background: linear-gradient(90deg, #ffc107, #005c97);
+    margin: 1.5rem auto 0;
+    border-radius: 4px;
+    box-shadow: 0 0 10px #ffc107aa;
+  }
+
+  /* Formulaire recherche */
+  form.search-form {
+    max-width: 480px;
+    margin: 0 auto 3rem;
+    position: relative;
+  }
+  form.search-form input[type="text"] {
+    width: 100%;
+    padding: 1rem 3.8rem 1rem 1.5rem;
+    font-size: 1.25rem;
+    border: 3px solid #005c97;
+    border-radius: 50px;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    box-shadow: inset 0 0 8px rgba(0,92,151,0.2);
+    font-weight: 600;
+    color: #004070;
+  }
+  form.search-form input[type="text"]::placeholder {
+    color: #005c97cc;
+    font-weight: 500;
+  }
+  form.search-form input[type="text"]:focus {
+    border-color: #ffc107;
+    box-shadow: 0 0 20px rgba(255,193,7,0.7);
+    outline: none;
+  }
+  form.search-form::after {
+    content: "\f002";
+    font-family: "Bootstrap Icons";
+    position: absolute;
+    right: 1.4rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.7rem;
+    color: #005c97;
+    pointer-events: none;
+    filter: drop-shadow(0 0 1px #005c97bb);
+  }
+
+  /* Tableau stylé */
+  table.dossiers-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 16px;
+    font-size: 1.1rem;
+  }
+  table.dossiers-table thead tr th {
+    text-align: left;
+    padding: 18px 22px;
+    color: #005c97;
+    font-weight: 800;
+    text-transform: uppercase;
+    border-bottom: 4px solid #ffc107;
+    letter-spacing: 0.1em;
+    user-select: none;
+  }
+  table.dossiers-table tbody tr {
+    background: #fefefe;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.06);
+    border-radius: 18px;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+  table.dossiers-table tbody tr:hover {
+    background-color: #fff9db;
+    transform: translateX(12px);
+    box-shadow: 0 14px 30px rgba(255,193,7,0.3);
+  }
+  table.dossiers-table tbody tr td {
+    padding: 20px 22px;
+    vertical-align: middle;
+    color: #34495e;
+  }
+  table.dossiers-table tbody tr td:first-child {
+    font-weight: 800;
+    color: #005c97;
+    font-size: 1.15rem;
+    width: 60px;
+  }
+
+  /* Responsive - transform table rows into cards */
+  @media (max-width: 700px) {
+    .dossiers-container {
+      padding: 2.5rem 2rem;
+    }
+    .page-header {
+      font-size: 2.4rem;
+      letter-spacing: 0.08em;
+    }
+    form.search-form {
+      max-width: 100%;
+      margin-bottom: 2rem;
+    }
+    form.search-form input[type="text"] {
+      font-size: 1.15rem;
+      padding: 0.85rem 3.4rem 0.85rem 1.3rem;
+    }
+    form.search-form::after {
+      font-size: 1.4rem;
+      right: 1.1rem;
+    }
+
+    table.dossiers-table thead {
+      display: none;
+    }
+    table.dossiers-table tbody tr {
+      display: block;
+      margin-bottom: 24px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      border-radius: 20px;
+      padding: 1.8rem 2.2rem;
+      transform: none !important;
+      cursor: default;
+    }
+    table.dossiers-table tbody tr:hover {
+      transform: none;
+      background-color: #fefefe;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    }
+    table.dossiers-table tbody tr td {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.7rem 0;
+      font-size: 1.1rem;
+      border-bottom: 1px solid #eaeaea;
+      color: #2c3e50;
+      font-weight: 600;
+    }
+    table.dossiers-table tbody tr td:last-child {
+      border-bottom: none;
+    }
+    table.dossiers-table tbody tr td::before {
+      content: attr(data-label);
+      font-weight: 700;
+      color: #005c97;
+      flex-basis: 45%;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      font-size: 1rem;
+    }
+  }
+
+  /* Message vide */
+  .empty-message {
+    text-align: center;
+    font-size: 1.35rem;
+    padding: 4rem 0;
+    color: #7f8c8d;
+    font-weight: 600;
+    user-select: none;
+  }
+
+  /* Pagination stylée */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 4rem;
+    gap: 16px;
+  }
+  .pagination .page-link {
+    padding: 0.85rem 1.9rem;
+    border-radius: 50px;
+    border: 2.5px solid #005c97;
+    color: #005c97;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+    box-shadow: 0 6px 14px rgba(0,92,151,0.22);
+    transition: all 0.35s cubic-bezier(.25,.8,.25,1);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    user-select: none;
+  }
+  .pagination .page-link:hover {
+    background: #ffc107;
+    color: #212529;
+    border-color: #ffc107;
+    box-shadow: 0 10px 24px rgba(255,193,7,0.45);
+  }
+  .pagination .disabled .page-link {
+    background: #e9ecef;
+    color: #adb5bd;
+    border-color: #dee2e6;
+    cursor: default;
+    box-shadow: none;
+  }
+  /* Icônes de pagination */
+  .pagination .page-link svg,
+  .pagination .page-link i {
+    font-size: 1.4rem;
+  }
+</style>
+
+<section class="dossiers-container" role="main" aria-labelledby="page-header">
+  <h2 id="page-header" class="page-header">
+    <i class="bi bi-folder2-open-fill" style="color:#ffc107; margin-right:0.5rem; font-size: 3.5rem; vertical-align: middle;"></i>
+    Dossiers de {{ user.username }}
+  </h2>
+
+  <form method="get" class="search-form" role="search" aria-label="Recherche de dossiers">
+    <input
+      type="text"
+      name="q"
+      placeholder="🔎 Rechercher un dossier..."
+      value="{{ query|default:'' }}"
+      autocomplete="off"
+      aria-describedby="searchHelp"
+      aria-label="Recherche de dossiers"
+    >
+  </form>
+
+  {% if page_obj %}
+    <table class="dossiers-table" role="table" aria-label="Liste des dossiers">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Titre</th>
+          <th scope="col">Date</th>
+          <th scope="col">Statut</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for dossier in page_obj %}
+          <tr tabindex="0" aria-label="Dossier {{ dossier.titre }}, créé le {{ dossier.date_created|date:'d/m/Y' }}, statut {{ dossier.statut }}">
+            <td data-label="#"> {{ forloop.counter }} </td>
+            <td data-label="Titre"> {{ dossier.titre }} </td>
+            <td data-label="Date"> {{ dossier.date_created|date:"d/m/Y" }} </td>
+            <td data-label="Statut"> {{ dossier.statut }} </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="4" class="empty-message">📭 Aucun dossier trouvé.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <nav class="pagination" role="navigation" aria-label="Pagination des dossiers">
+      {% if page_obj.has_previous %}
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}" aria-label="Page précédente">
+          <i class="bi bi-caret-left-fill"></i> Précédent
+        </a>
+      {% else %}
+        <span class="page-link disabled" aria-disabled="true">
+          <i class="bi bi-caret-left-fill"></i> Précédent
+        </span>
+      {% endif %}
+
+      <span class="page-link disabled" aria-current="page">
+        Page {{ page_obj.number }}
+      </span>
+
+      {% if page_obj.has_next %}
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}" aria-label="Page suivante">
+          Suivant <i class="bi bi-caret-right-fill"></i>
+        </a>
+      {% else %}
+        <span class="page-link disabled" aria-disabled="true">
+          Suivant <i class="bi bi-caret-right-fill"></i>
+        </span>
+      {% endif %}
+    </nav>
+  {% else %}
+    <p class="empty-message">📭 Aucun dossier trouvé.</p>
+  {% endif %}
+</section>
+{% endblock %}

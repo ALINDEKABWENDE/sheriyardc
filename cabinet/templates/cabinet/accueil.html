@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+/* ===== HERO ===== */
+.hero {
+  background: linear-gradient(135deg, #4f9ec4 0%, #6bb5d8 100%);
+  color: #fff;
+  padding: 5rem 2rem;
+  border-radius: 1rem;
+  text-align: center;
+  margin-bottom: 3rem;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  top: -40%;
+  left: -40%;
+  width: 180%;
+  height: 180%;
+  background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 70%);
+  animation: pulse 12s infinite ease-in-out;
+  pointer-events: none;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+.hero h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+}
+.hero p {
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  opacity: 0.95;
+}
+.hero-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* ===== MODAL ===== */
+.modal-content {
+  border-radius: 1rem;
+  background: #ffffff;
+  color: #333;
+}
+.modal-header {
+  border-bottom: none;
+  background: #4f9ec4;
+  color: #fff;
+}
+.modal-body a {
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+/* ===== FONCTIONNALITÉS ===== */
+.feature-grid { margin-top: 2rem; }
+.feature-box {
+  background-color: #fff;
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.feature-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.07);
+}
+.feature-box h4 {
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-bottom: 0.8rem;
+}
+.feature-box p {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+/* ===== STATISTIQUES ===== */
+.stat-box {
+  background: #f9fbfc;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  margin-top: 2rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+.stat-box .col { padding: 1rem 0; }
+.stat-box p { font-size: 1.05rem; font-weight: 600; margin: 0; }
+
+/* ===== ACTUALITÉS ===== */
+.actualites-section h3 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  border-left: 4px solid #4f9ec4;
+  padding-left: 0.5rem;
+}
+.card {
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.07);
+}
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+.card-title { font-weight: 700; font-size: 1.1rem; }
+.card-footer { font-size: 0.85rem; color: #666; }
+</style>
+
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  {% if user.is_authenticated %}
+    {% if user.juriste_profile.photo %}
+      <img src="{{ user.juriste_profile.photo.url }}" alt="Photo de profil" class="hero-avatar mb-3">
+    {% else %}
+      <img src="{% static 'img/default_avatar.png' %}" alt="Avatar par défaut" class="hero-avatar mb-3">
+    {% endif %}
+    <h1>⚖️ Sheriya CD</h1>
+    <p>Bonjour <strong>{{ user.get_full_name|default:user.username }}</strong> — 
+       <span class="badge bg-light text-dark">{{ user.juriste_profile.profession }}</span>
+    </p>
+    <div class="btn-group mt-3">
+      <a href="{% url 'accounts:juriste_dashboard' %}" class="btn btn-light position-relative z-2">🎯 Mon espace</a>
+      <a href="{% url 'accounts:voir_profil' %}" class="btn btn-outline-light position-relative z-2">👨‍⚖️ Voir mon profil</a>
+    </div>
+  {% else %}
+    <h1>⚖️ Sheriya CD</h1>
+    <p>Un portail juridique intelligent, inclusif et institutionnel pour la République Démocratique du Congo.</p>
+    <div class="btn-group mt-3">
+      <button class="btn btn-light position-relative z-2" data-bs-toggle="modal" data-bs-target="#loginModal">🔐 Se connecter</button>
+      <a href="{% url 'accounts:signup_choice' %}" class="btn btn-outline-light position-relative z-2">🆕 Créer un compte</a>
+    </div>
+  {% endif %}
+</div>
+
+<!-- ===== MODAL CHOIX DE COMPTE ===== -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="loginModalLabel">Choisissez votre type de compte</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body text-center">
+        <a href="{% url 'accounts:login' %}" class="btn btn-outline-light w-100 mb-3">🏛️ Compte Institutionnel</a>
+        <a href="{% url 'accounts:login_citoyen_view'  %}" class="btn btn-outline-light w-100">👤 Compte Citoyen</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FONCTIONNALITÉS ===== -->
+<div class="row feature-grid">
+  <div class="col-md-4">
+    <div class="feature-box">
+      <h4>🔍 Recherche juridique</h4>
+      <p>Explorez lois, codes et jurisprudences en toute simplicité.</p>
+      <a href="{% url 'legislation:recherche_lois' %}" class="btn btn-sm btn-outline-dark">Accéder</a>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="feature-box">
+      <h4>📄 Documents légaux</h4>
+      <p>Créez, signez et archivez vos documents en ligne.</p>
+      <a href="{% url 'documents:documents_liste' %}" class="btn btn-sm btn-outline-dark">Mes documents</a>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="feature-box">
+      <h4>👨‍⚖️ Profil juriste</h4>
+      {% if user.is_authenticated %}
+        <p>Votre vitrine professionnelle vous valorise auprès des institutions.</p>
+        <a href="{% url 'accounts:voir_profil' %}" class="btn btn-sm btn-outline-dark">Voir mon profil</a>
+      {% else %}
+        <p>Créez votre vitrine juridique et gagnez en crédibilité.</p>
+        <a href="{% url 'accounts:signup_choice' %}" class="btn btn-sm btn-outline-dark">Créer un profil</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- ===== STATISTIQUES ===== -->
+{% if user.is_authenticated %}
+<div class="stat-box text-center">
+  <div class="row">
+    <div class="col">📂 Dossiers actifs : {{ user.dossier_set.count }}</div>
+    <div class="col">📚 Lois référencées : {{ lois_count }}</div>
+    <div class="col">🧑‍⚖️ Juristes inscrits : {{ juristes_count }}</div>
+  </div>
+</div>
+{% endif %}
+
+<!-- ===== ACTUALITÉS ===== -->
+<div class="actualites-section mt-5">
+  <h3>🗞️ Dernières actualités</h3>
+  <div class="row">
+    {% for article in actualites %}
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+          {% if article.image %}
+            <img src="{{ article.image.url }}" class="card-img-top" alt="{{ article.titre }}">
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title">{{ article.titre }}</h5>
+            <p class="card-text">{{ article.contenu|truncatechars:120 }}</p>
+          </div>
+          <div class="card-footer small">
+            ✍️ {{ article.auteur }}<br>
+            📅 {{ article.date_publication|date:"d M Y" }}<br>
+            🗂️ {{ article.categorie }}
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="alert alert-warning text-center">Aucune actualité disponible.</div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

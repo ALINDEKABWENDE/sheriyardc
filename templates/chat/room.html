@@ -1,0 +1,17 @@
+<div id="chat-log"></div>
+
+<script>
+  const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/{{ room_name }}/');
+
+  chatSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    const log = document.querySelector('#chat-log');
+    log.innerHTML += `<div><strong>[${data.role}] ${data.username}</strong>: ${data.message}</div>`;
+  };
+
+  document.querySelector('#chat-message-submit').onclick = function(e) {
+    const input = document.querySelector('#chat-message-input');
+    chatSocket.send(JSON.stringify({ 'message': input.value }));
+    input.value = '';
+  };
+</script>

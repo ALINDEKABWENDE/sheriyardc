@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  .dashboard-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: #212529;
+  }
+  .card-role {
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-radius: 12px;
+  }
+  .card-role:hover {
+    transform: scale(1.03);
+  }
+  .card-title {
+    font-weight: 600;
+    font-size: 1.2rem;
+  }
+  .card-text {
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+</style>
+
+<h2 class="dashboard-title">
+  <i class="bi bi-speedometer2"></i> Tableau de bord {{ role|capfirst }}
+</h2>
+
+<div class="row">
+  {% if role == "citoyen" %}
+    <div class="col-md-6 mb-4">
+      <div class="card bg-info text-white card-role">
+        <div class="card-body">
+          <h5 class="card-title">Mes dossiers juridiques</h5>
+          <p class="card-text">{{ total_dossiers }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="card bg-warning text-dark card-role">
+        <div class="card-body">
+          <h5 class="card-title">Mes rendez-vous</h5>
+          <p class="card-text">{{ rendezvous }}</p>
+        </div>
+      </div>
+    </div>
+
+  {% elif role == "juriste" %}
+    <div class="col-md-6 mb-4">
+      <div class="card bg-success text-white card-role">
+        <div class="card-body">
+          <h5 class="card-title">Consultations en cours</h5>
+          <p class="card-text">{{ rendezvous }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="card bg-secondary text-white card-role">
+        <div class="card-body">
+          <h5 class="card-title">Lois consultées</h5>
+          <p class="card-text">{{ lois }}</p>
+        </div>
+      </div>
+    </div>
+
+  {% elif role == "admin" %}
+    <div class="col-md-6 mb-4">
+      <div class="card bg-danger text-white card-role">
+        <div class="card-body">
+          <h5 class="card-title">Dossiers à valider</h5>
+          <p class="card-text">{{ attente }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="card bg-dark text-white card-role">
+        <div class="card-body">
+          <h5 class="card-title">Juristes enregistrés</h5>
+          <p class="card-text">{{ juristes }}</p>
+        </div>
+      </div>
+    </div>
+
+  {% elif role == "institution" %}
+    <div class="col-md-6 mb-4">
+      <div class="card bg-primary text-white card-role">
+        <div class="card-body">
+          <h5 class="card-title">Textes publiés</h5>
+          <p class="card-text">{{ textes }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="card bg-warning text-dark card-role">
+        <div class="card-body">
+          <h5 class="card-title">Alertes diffusées</h5>
+          <p class="card-text">{{ alerts }}</p>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}
+
+
+

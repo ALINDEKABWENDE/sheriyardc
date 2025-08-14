@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block title %}Connexion Citoyen{% endblock %}
+{% block content %}
+
+<style>
+  body {
+    background: linear-gradient(135deg, #e0f7fa, #f1f8ff);
+    font-family: 'Segoe UI', Roboto, sans-serif;
+  }
+
+  .login-box {
+    background: rgba(255, 255, 255, 0.85);
+    padding: 2.5rem;
+    border-radius: 1rem;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    max-width: 500px;
+    margin: auto;
+    animation: fadeIn 0.8s ease-in-out;
+  }
+
+  .login-box h2 {
+    font-weight: 800;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #2c6483;
+    text-align: center;
+    position: relative;
+  }
+
+  .login-box h2::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #2c6483, #4caf50);
+    margin: 8px auto 0;
+    border-radius: 2px;
+  }
+
+  .login-box label {
+    font-weight: 600;
+    margin-top: 1rem;
+    display: block;
+    color: #1d3c4e;
+  }
+
+  .login-box input {
+    border: 2px solid #d1e3ec;
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    width: 100%;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+  }
+
+  .login-box input:focus {
+    border-color: #2c6483;
+    outline: none;
+    box-shadow: 0 0 8px rgba(44, 100, 131, 0.3);
+  }
+
+  .login-box .btn-primary {
+    background: linear-gradient(90deg, #2c6483, #4caf50);
+    border: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 0.8rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    color: white;
+    width: 100%;
+  }
+
+  .login-box .btn-primary:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(44, 100, 131, 0.4);
+  }
+
+  .login-box .text-center a {
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .login-box .text-center a:hover {
+    color: #2c6483;
+  }
+
+  .alert {
+    background-color: #ffd6d6;
+    color: #9b1c1c;
+    border: 1.5px solid #9b1c1c;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    .login-box {
+      padding: 2rem;
+    }
+  }
+</style>
+
+<div class="login-box mt-5">
+  <h2><i class="bi bi-person-circle"></i> Connexion Citoyen</h2>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="POST" action="{% url 'accounts:login_citoyen_view' %}">
+    {% csrf_token %}
+
+    <label><i class="bi bi-person-fill"></i> Nom d'utilisateur :</label>
+    <input type="text" name="username" required placeholder="Ex: jean123">
+
+    <label><i class="bi bi-lock-fill"></i> Mot de passe :</label>
+    <input type="password" name="password" required>
+
+    <button type="submit" class="btn btn-primary mt-3">🔐 Se connecter</button>
+  </form>
+
+  <div class="text-center mt-3">
+    <a href="{% url 'accounts:signup_citoyen' %}" class="text-muted">📝 Pas encore inscrit ? Créer un compte</a>
+  </div>
+</div>
+
+{% endblock %}

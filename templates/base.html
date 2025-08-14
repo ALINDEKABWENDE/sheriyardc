@@ -1,0 +1,333 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Juriplatform | Portail juridique RDC</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Favicon & SEO -->
+  <link rel="icon" href="{% static 'img/favicon.ico' %}">
+  <meta name="description" content="Plateforme juridique intelligente pour citoyens, juristes et institutions de la RDC.">
+
+  <!-- UI — Ultra style -->
+  <style>
+    :root{
+      --bg:#0f172a;
+      --card:#111827cc;
+      --glass:rgba(255,255,255,.08);
+      --muted:#94a3b8;
+      --brand:#20a4ff;
+      --brand-2:#7dd3fc;
+      --accent:#ffd166;
+      --ok:#22c55e;
+      --danger:#ef4444;
+      --ring:0 0 0 .25rem rgba(32,164,255,.25);
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+
+    html, body {
+      margin:0;
+      padding:0;
+      background:
+        radial-gradient(1200px 600px at 10% 0%, #0b1226 0%, transparent 60%),
+        radial-gradient(900px 500px at 100% 10%, #0b1e35 0%, transparent 60%),
+        linear-gradient(180deg, #0a1224 0%, #0b1326 30%, #0b1428 100%);
+      color:#e5e7eb;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding-top: 4.75rem; /* navbar fixed */
+    }
+
+    @media (max-width: 992px) {
+      body { padding-top: 5.5rem; }
+    }
+
+    main.container {
+      flex: 1;
+      max-width:1200px;
+      margin-top: 1rem;
+    }
+
+    /* NAVBAR GLASS */
+    .navbar{
+      backdrop-filter: saturate(160%) blur(10px);
+      background: linear-gradient(to right, rgba(7,12,22,.85), rgba(10,18,36,.75));
+      border-bottom:1px solid var(--glass);
+      box-shadow: var(--shadow);
+    }
+    .navbar .navbar-brand{
+      letter-spacing:.2px; font-weight:800;
+      background: linear-gradient(90deg, #fff, var(--brand-2));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .nav-link{
+      color:#d1d5db!important; opacity:.9; transition:.2s;
+      border-radius:12px; padding:.45rem .85rem;
+    }
+    .nav-link:hover{ color:#fff!important; background:var(--glass); }
+    .btn-cta{
+      background:linear-gradient(135deg, var(--brand), var(--brand-2));
+      color:#0b1220; font-weight:700; border:none;
+      box-shadow:0 10px 25px rgba(32,164,255,.25);
+    }
+    .btn-cta:hover{ filter:brightness(1.05); transform:translateY(-1px); }
+    .btn-ghost{
+      border:1px solid var(--glass); color:#e5e7eb; background:transparent;
+    }
+    .btn-ghost:hover{ background:var(--glass); }
+
+    /* TOAST & SCROLLTOP */
+    .toast-container{ position:fixed; bottom:1rem; right:1rem; z-index:1080; }
+    .scroll-top{
+      position:fixed; bottom:88px; right:18px; z-index:1070; display:none;
+      background:var(--accent); color:#111; border:none; width:44px; height:44px;
+      border-radius:999px; box-shadow:var(--shadow);
+    }
+    .scroll-top:hover{ filter:brightness(.95); }
+
+    /* FOOTER */
+    footer{
+      background: linear-gradient(180deg, rgba(10,18,36,.6), rgba(10,18,36,.9));
+      border-top:1px solid var(--glass);
+      padding-top:1.5rem; padding-bottom:1rem;
+    }
+    footer h5, footer h6{ color:#c7d2fe; letter-spacing:.4px; }
+    footer a{ color:#cbd5e1; text-decoration:none }
+    footer a:hover{ color:#fff; text-decoration:underline }
+
+    /* OFFCANVAS */
+    .offcanvas{
+      background: linear-gradient(180deg, rgba(8,14,26,.95), rgba(12,20,38,.95));
+      color:#e5e7eb;
+      border-left:1px solid var(--glass);
+    }
+    .list-menu a{ border-radius:12px; }
+    .list-menu a:hover{ background:var(--glass); }
+
+    /* CARDS */
+    .card-glass{
+      background:linear-gradient(180deg, rgba(15,23,42,.6), rgba(17,24,39,.35));
+      border:1px solid var(--glass);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+
+    /* MODAL */
+    .modal-content{
+      background: linear-gradient(145deg, rgba(10,18,36,.95), rgba(15,28,55,.92));
+      color:#e5e7eb; border:1px solid var(--glass); border-radius:20px;
+      box-shadow:0 30px 80px rgba(0,0,0,.55);
+    }
+    .modal-header{ border-bottom:1px solid var(--glass) }
+    .account-tile{
+      border:1px solid var(--glass);
+      border-radius:16px; padding:1rem 1.25rem;
+      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+      transition:.2s; display:flex; align-items:center; gap:.8rem;
+    }
+    .account-tile:hover{ background:var(--glass); transform:translateY(-1px) }
+    .badge-role{ background:var(--glass); border:1px solid rgba(255,255,255,.08) }
+  </style>
+</head>
+<body>
+
+<!-- Scroll-to-top -->
+<button class="scroll-top" id="scrollTopBtn" aria-label="Retour en haut">
+  <i class="bi bi-arrow-up"></i>
+</button>
+
+<!-- Toast messages -->
+<div class="toast-container">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="toast show text-bg-{{ message.tags|default:'dark' }} border-0 mb-2 shadow">
+        <div class="toast-body">{{ message }}</div>
+      </div>
+    {% endfor %}
+  {% endif %}
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'cabinet:accueil' %}">
+      <span class="fs-4">⚖️</span> <span>Sheriya</span>
+      <span class="badge badge-role ms-1">RDC</span>
+    </a>
+
+    <div class="d-flex d-lg-none gap-2">
+      {% if user.is_authenticated %}
+        <a href="{% url 'accounts:logout' %}" class="btn btn-sm btn-ghost"><i class="bi bi-box-arrow-right"></i></a>
+      {% else %}
+        <button class="btn btn-sm btn-ghost" data-bs-toggle="modal" data-bs-target="#accountModal"><i class="bi bi-person-plus"></i></button>
+      {% endif %}
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto align-items-center gap-1">
+        {% if user.is_authenticated and user.juriste_profile %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'accounts:juriste_dashboard' %}"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'dossiers:liste_dossiers' %}"><i class="bi bi-folder2-open"></i> Dossiers</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'accounts:voir_profil' %}"><i class="bi bi-person-badge"></i> Profil</a></li>
+          <li class="nav-item ms-2"><a class="btn btn-sm btn-ghost" href="{% url 'accounts:logout' %}"><i class="bi bi-box-arrow-right"></i> Déconnexion</a></li>
+        {% elif user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'citoyen:dashboard' %}"><i class="bi bi-house-door"></i> Accueil</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'citoyen:mes_demandes' %}"><i class="bi bi-envelope-open"></i> Mes demandes</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'accounts:voir_profil_citoyen' %}"><i class="bi bi-person-circle"></i> Profil</a></li>
+          <li class="nav-item ms-2"><a class="btn btn-sm btn-ghost" href="{% url 'accounts:logout' %}"><i class="bi bi-box-arrow-right"></i> Déconnexion</a></li>
+        {% else %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
+              <i class="bi bi-box-arrow-in-right"></i> Connexion
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark shadow">
+              <li><a class="dropdown-item" href="{% url 'accounts:login' %}">🏛️ Institutionnel</a></li>
+              <li><a class="dropdown-item" href="{% url 'accounts:login_citoyen_view' %}">👤 Citoyen</a></li>
+            </ul>
+          </li>
+          <li class="nav-item ms-1">
+            <button class="btn btn-sm btn-cta" data-bs-toggle="modal" data-bs-target="#accountModal">
+              <i class="bi bi-person-plus"></i> Créer un compte
+            </button>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- OFFCANVAS MOBILE -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
+  <div class="offcanvas-header">
+    <h5 id="mobileMenuLabel" class="mb-0">Menu</h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="list-group list-menu">
+      {% if user.is_authenticated and user.juriste_profile %}
+        <a href="{% url 'accounts:juriste_dashboard' %}" class="list-group-item list-group-item-action bg-transparent text-light border-0"><i class="bi bi-speedometer2"></i> Dashboard juriste</a>
+        <a href="{% url 'dossiers:liste_dossiers' %}" class="list-group-item list-group-item-action bg-transparent text-light border-0"><i class="bi bi-folder2-open"></i> Mes dossiers</a>
+        <a href="{% url 'accounts:voir_profil' %}" class="list-group-item list-group-item-action bg-transparent text-light border-0"><i class="bi bi-person-badge"></i> Mon profil</a>
+        <hr class="border-secondary">
+        <a href="{% url 'accounts:logout' %}" class="list-group-item list-group-item-action bg-transparent text-danger border-0"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
+      {% elif user.is_authenticated %}
+        <a href="{% url 'citoyen:dashboard' %}" class="list-group-item list-group-item-action bg-transparent text-light border-0"><i class="bi bi-house-door"></i> Accueil citoyen</a>
+        <a href="{% url 'citoyen:mes_demandes' %}" class="list-group-item list-group-item-action bg-transparent text-light border-0"><i class="bi bi-envelope-open"></i> Mes demandes</a>
+        <a href="{% url 'accounts:modifier_profil_citoyen' %}" class="list-group-item list-group-item-action bg-transparent text-light border-0"><i class="bi bi-person-circle"></i> Mon profil</a>
+        <hr class="border-secondary">
+        <a href="{% url 'accounts:logout' %}" class="list-group-item list-group-item-action bg-transparent text-danger border-0"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
+      {% else %}
+        <a href="{% url 'accounts:login' %}" class="list-group-item list-group-item-action bg-transparent text-light border-0"><i class="bi bi-building-lock"></i> Connexion Institution</a>
+        <a href="{% url 'accounts:login_citoyen_view' %}" class="list-group-item list-group-item-action bg-transparent text-light border-0"><i class="bi bi-person"></i> Connexion Citoyen</a>
+        <hr class="border-secondary">
+        <button class="btn btn-cta w-100" data-bs-toggle="modal" data-bs-target="#accountModal"><i class="bi bi-person-plus"></i> Créer un compte</button>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- CONTENU -->
+<main class="container my-4">
+  {% block content %}{% endblock %}
+</main>
+
+<!-- FOOTER -->
+<footer class="mt-auto">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-5">
+        <h5 class="fw-bold mb-2">⚖️ Sheriya</h5>
+        <p class="small text-secondary">Portail juridique intelligent pour la RDC — structuration, accès et innovation au service des citoyens et des institutions.</p>
+        <span class="badge badge-role">Version stable</span>
+      </div>
+      <div class="col-md-4">
+        <h6 class="text-uppercase fw-bold mb-3">Navigation</h6>
+        <ul class="list-unstyled">
+          {% if user.is_authenticated and user.juriste_profile %}
+            <li class="mb-2"><a href="{% url 'accounts:juriste_dashboard' %}"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+            <li class="mb-2"><a href="{% url 'dossiers:liste_dossiers' %}"><i class="bi bi-folder2-open"></i> Mes dossiers</a></li>
+            <li class="mb-2"><a href="{% url 'accounts:voir_profil' %}"><i class="bi bi-person-badge"></i> Profil</a></li>
+          {% elif user.is_authenticated %}
+            <li class="mb-2"><a href="{% url 'citoyen:dashboard' %}"><i class="bi bi-house-door"></i> Accueil</a></li>
+            <li class="mb-2"><a href="{% url 'citoyen:mes_demandes' %}"><i class="bi bi-envelope-open"></i> Mes demandes</a></li>
+            <li class="mb-2"><a href="{% url 'accounts:modifier_profil_citoyen' %}"><i class="bi bi-person-circle"></i> Profil</a></li>
+          {% else %}
+            <li class="mb-2"><a href="{% url 'accounts:login' %}"><i class="bi bi-box-arrow-in-right"></i> Connexion</a></li>
+            <li class="mb-2"><a href="#" data-bs-toggle="modal" data-bs-target="#accountModal"><i class="bi bi-person-plus"></i> Créer un compte</a></li>
+          {% endif %}
+        </ul>
+      </div>
+      <div class="col-md-3">
+        <h6 class="text-uppercase fw-bold mb-3">Contact</h6>
+        <p class="small"><i class="bi bi-envelope"></i> contact@juriplatform.cd</p>
+        <p class="small"><i class="bi bi-github"></i> Sheriya-RDC</p>
+      </div>
+    </div>
+    <hr class="border-secondary mt-4">
+    <div class="text-center small text-secondary">
+      &copy; {% now "Y" %} Sheriya• Tous droits réservés.
+    </div>
+  </div>
+</footer>
+
+<!-- MODAL — Choix de compte -->
+<div class="modal fade" id="accountModal" tabindex="-1" aria-labelledby="accountModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="accountModalLabel">Créer un compte</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="vstack gap-3">
+          <a class="account-tile text-decoration-none text-light" href="{% url 'accounts:register_juriste' %}">
+            <i class="bi bi-bank2 fs-4 text-info"></i>
+            <div>
+              <div class="fw-bold">Compte Institutionnel (Juriste)</div>
+              <small class="text-secondary">Profil vérifié, vitrine professionnelle, accès dossiers.</small>
+            </div>
+          </a>
+          <a class="account-tile text-decoration-none text-light" href="{% url  'accounts:signup_citoyen' %}">
+            <i class="bi bi-person fs-4 text-warning"></i>
+            <div>
+              <div class="fw-bold">Compte Citoyen</div>
+              <small class="text-secondary">Suivi de demandes, accès documents et services.</small>
+            </div>
+          </a>
+          <div class="text-center mt-2">
+            <small class="text-secondary">Vous avez déjà un compte ?</small><br>
+            <div class="btn-group mt-2">
+              <a href="{% url 'accounts:login' %}" class="btn btn-sm btn-ghost">Se connecter (Institution)</a>
+              <a href="{% url 'accounts:login_citoyen_view' %}" class="btn btn-sm btn-ghost">Se connecter (Citoyen)</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-0">
+        <button class="btn btn-ghost" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JS Bootstrap + UX -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const st = document.getElementById('scrollTopBtn');
+  window.addEventListener('scroll', () => {
+    st.style.display = (window.scrollY > 220) ? 'inline-flex' : 'none';
+  });
+</script>
+</body>
+</html>

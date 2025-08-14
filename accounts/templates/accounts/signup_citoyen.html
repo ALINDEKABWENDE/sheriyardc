@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Inscription Citoyen{% endblock %}
+{% block content %}
+
+<style>
+  body {
+    background: linear-gradient(135deg, #e0f7fa, #f1f8ff);
+    font-family: 'Segoe UI', Roboto, sans-serif;
+  }
+
+  .signup-box {
+    background: rgba(255, 255, 255, 0.85);
+    padding: 2.5rem;
+    border-radius: 1rem;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    max-width: 600px;
+    margin: auto;
+    animation: fadeIn 0.8s ease-in-out;
+  }
+
+  .signup-box h2 {
+    font-weight: 800;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #2c6483;
+    text-align: center;
+    position: relative;
+  }
+
+  .signup-box h2::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #2c6483, #4caf50);
+    margin: 8px auto 0;
+    border-radius: 2px;
+  }
+
+  .signup-box label {
+    font-weight: 600;
+    margin-top: 1rem;
+    display: block;
+    color: #1d3c4e;
+  }
+
+  .signup-box input,
+  .signup-box select,
+  .signup-box textarea {
+    border: 2px solid #d1e3ec;
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    width: 100%;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+  }
+
+  .signup-box input:focus,
+  .signup-box select:focus,
+  .signup-box textarea:focus {
+    border-color: #2c6483;
+    outline: none;
+    box-shadow: 0 0 8px rgba(44, 100, 131, 0.3);
+  }
+
+  .signup-box .btn-primary {
+    background: linear-gradient(90deg, #2c6483, #4caf50);
+    border: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 0.8rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    color: white;
+    width: 100%;
+  }
+
+  .signup-box .btn-primary:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(44, 100, 131, 0.4);
+  }
+
+  .signup-box .text-center a {
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .signup-box .text-center a:hover {
+    color: #2c6483;
+  }
+
+  .alert {
+    background-color: #ffe3e3;
+    border: 1px solid #ffb0b0;
+    color: #d8000c;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    .signup-box {
+      padding: 1.8rem;
+    }
+  }
+</style>
+
+<div class="signup-box mt-5">
+  <h2>👤 Inscription Citoyen</h2>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  {% if form.errors %}
+    <div class="alert alert-danger">
+      <ul>
+        {% for field in form %}
+          {% for error in field.errors %}
+            <li><strong>{{ field.label }} :</strong> {{ error }}</li>
+          {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label>{{ form.full_name.label }}</label>
+    {{ form.full_name }}
+
+    <label>{{ form.sexe.label }}</label>
+    {{ form.sexe }}
+
+    <label>{{ form.date_naissance.label }}</label>
+    {{ form.date_naissance }}
+
+    <label>{{ form.ville.label }}</label>
+    {{ form.ville }}
+
+    <label>{{ form.profession.label }}</label>
+    {{ form.profession }}
+
+    <label>{{ form.telephone.label }}</label>
+    {{ form.telephone }}
+
+    <label>{{ form.bio.label }}</label>
+    {{ form.bio }}
+
+    <label>{{ form.email.label }}</label>
+    {{ form.email }}
+
+    <label>{{ form.photo.label }}</label>
+    {{ form.photo }}
+
+    <label>{{ form.password.label }}</label>
+    {{ form.password }}
+
+    <button type="submit" class="btn btn-primary mt-3">📝 Créer mon compte</button>
+  </form>
+
+  <div class="text-center mt-3">
+    <a href="{% url 'accounts:login' %}" class="text-muted">🔐 Déjà inscrit ? Se connecter</a>
+  </div>
+</div>
+
+{% endblock %}

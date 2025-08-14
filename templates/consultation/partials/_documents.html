@@ -1,0 +1,91 @@
+<style>
+  /* Carte globale */
+  .doc-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  .doc-card:hover {
+    transform: translateY(-3px);
+  }
+
+  /* En-tête */
+  .doc-card-header {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 12px 20px;
+  }
+
+  /* Liste */
+  .doc-card-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  .doc-card-list li {
+    padding: 15px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .doc-card-list li:last-child {
+    border-bottom: none;
+  }
+
+  /* Bouton télécharger */
+  .doc-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border: 2px solid #17a2b8;
+    border-radius: 6px;
+    color: #17a2b8;
+    background: transparent;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+  }
+  .doc-btn:hover {
+    background: #17a2b8;
+    color: white;
+  }
+
+  /* Texte vide */
+  .doc-empty {
+    color: #888;
+    font-style: italic;
+  }
+
+  /* Responsive */
+  @media (max-width: 576px) {
+    .doc-card-header {
+      font-size: 1rem;
+      text-align: center;
+    }
+    .doc-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<!-- Documents reçus -->
+<div class="card mb-4 doc-card">
+  <div class="doc-card-header">📁 Documents reçus</div>
+  <ul class="doc-card-list">
+    {% for r in reponses %}
+      {% if r.document %}
+      <li>
+        <strong>{{ r.question.titre }}</strong> <br>
+        <a href="{{ r.document.url }}" class="doc-btn mt-2" target="_blank">
+          📄 Télécharger le document
+        </a>
+      </li>
+      {% endif %}
+    {% empty %}
+    <li class="doc-empty">Aucun document disponible.</li>
+    {% endfor %}
+  </ul>
+</div>

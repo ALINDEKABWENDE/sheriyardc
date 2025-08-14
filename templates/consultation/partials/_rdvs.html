@@ -1,0 +1,19 @@
+<!-- Rendez-vous -->
+<div class="card mb-4">
+  <div class="card-header bg-success text-white">📅 Mes Rendez-vous</div>
+  <ul class="list-group list-group-flush">
+    {% for rdv in rdvs %}
+    <li class="list-group-item">
+      <strong>{{ rdv.objet }}</strong> <br>
+      <small class="text-muted">Le {{ rdv.date|date:"d M Y à H:i" }}</small>
+      {% if rdv.status == 'confirmé' %}
+        <span class="badge bg-success float-end">Confirmé</span>
+      {% else %}
+        <span class="badge bg-secondary float-end">En attente</span>
+      {% endif %}
+    </li>
+    {% empty %}
+    <li class="list-group-item text-muted">Aucun rendez-vous enregistré.</li>
+    {% endfor %}
+  </ul>
+</div>

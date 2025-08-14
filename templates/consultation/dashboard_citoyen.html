@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Bienvenue {{ request.user.get_full_name }}</h2>
+
+<div class="row">
+  <div class="col-md-4">
+    <h4>Mes rendez-vous</h4>
+    {% for rdv in rdvs %}
+      <div class="card mb-2">
+        <div class="card-body">
+          <strong>{{ rdv.date|date:"d/m/Y H:i" }}</strong><br>
+          Avec {{ rdv.juriste.user.get_full_name }}<br>
+          Statut : {{ rdv.statut }}
+        </div>
+      </div>
+    {% empty %}
+      <p>Aucun rendez-vous.</p>
+    {% endfor %}
+  </div>
+
+  <div class="col-md-4">
+    <h4>Mes questions</h4>
+    {% for q in questions %}
+      <div class="card mb-2">
+        <div class="card-body">
+          {{ q.contenu|truncatewords:20 }}<br>
+          Statut : {{ q.statut }}
+        </div>
+      </div>
+    {% empty %}
+      <p>Aucune question posée.</p>
+    {% endfor %}
+    <a href="{% url 'citoyen:poser_question' %}" class="btn btn-primary mt-2">Poser une question</a>
+  </div>
+
+  <div class="col-md-4">
+    <h4>Mes appels vidéo</h4>
+    {% for appel in appels %}
+      <div class="card mb-2">
+        <div class="card-body">
+          {{ appel.date|date:"d/m/Y H:i" }}<br>
+          Lien : <a href="{{ appel.lien }}" target="_blank">Rejoindre</a><br>
+          Statut : {{ appel.statut }}
+        </div>
+      </div>
+    {% empty %}
+      <p>Aucun appel prévu.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Créer un compte{% endblock %}
+
+{% block content %}
+<style>
+/* ==== Conteneur personnalisé ==== */
+.account-choice-container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* ==== Titre ==== */
+.account-choice-container h2 {
+    font-weight: 800;
+    color: #1d3557;
+    letter-spacing: 0.5px;
+    position: relative;
+}
+.account-choice-container h2::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #2196f3, #4caf50);
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+/* ==== Boutons ==== */
+.account-choice-container .btn {
+    border-width: 2px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.account-choice-container .btn-outline-primary {
+    border-color: #2196f3;
+    color: #2196f3;
+    background: white;
+}
+.account-choice-container .btn-outline-primary:hover {
+    background: #2196f3;
+    color: white;
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 8px 20px rgba(33, 150, 243, 0.4);
+}
+
+.account-choice-container .btn-outline-success {
+    border-color: #4caf50;
+    color: #4caf50;
+    background: white;
+}
+.account-choice-container .btn-outline-success:hover {
+    background: #4caf50;
+    color: white;
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+}
+
+/* ==== Animation ==== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==== Responsive ==== */
+@media (max-width: 768px) {
+    .account-choice-container {
+        padding: 25px;
+    }
+    .account-choice-container .btn {
+        font-size: 1rem;
+    }
+}
+</style>
+
+<div class="container mt-5 text-center account-choice-container">
+    <h2 class="mb-4">👥 Choisissez votre type de compte</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-md-4 mb-3">
+            <a href="{% url 'accounts:signup_citoyen' %}" class="btn btn-outline-primary w-100 py-3">
+                👤 Je suis un <strong>citoyen</strong><br>
+                <small class="text-muted">Accès aux consultations et questions juridiques</small>
+            </a>
+        </div>
+        <div class="col-md-4 mb-3">
+            <a href="{% url 'accounts:signup_juriste' %}" class="btn btn-outline-success w-100 py-3">
+                ⚖️ Je suis un <strong>juriste</strong><br>
+                <small class="text-muted">Accès au dashboard professionnel</small>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

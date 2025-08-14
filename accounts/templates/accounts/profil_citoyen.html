@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+  @import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css');
+
+  body {
+    background: linear-gradient(135deg, #005c97, #363795);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #444;
+    margin: 0;
+    padding: 2rem 1rem;
+  }
+
+  .profil-container {
+    max-width: 900px;
+    margin: 3rem auto;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    display: flex;
+    gap: 2.5rem;
+    padding: 3rem;
+    align-items: center;
+    transition: transform 0.3s ease;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .profil-container:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+  }
+
+  .profil-photo {
+    flex-shrink: 0;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 15px rgba(0, 92, 151, 0.6);
+    border: 5px solid #005c97;
+    transition: box-shadow 0.3s ease;
+    margin-bottom: 1rem;
+  }
+
+  .profil-photo:hover {
+    box-shadow: 0 0 25px rgba(0, 92, 151, 0.9);
+  }
+
+  .profil-details {
+    flex: 1 1 300px;
+    min-width: 280px;
+  }
+
+  .profil-details h2 {
+    color: #005c97;
+    font-weight: 700;
+    font-size: 2.6rem;
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .profil-details p {
+    font-size: 1.15rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: #444;
+  }
+
+  .profil-details p strong {
+    color: #005c97;
+    min-width: 140px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .profil-details p i {
+    color: #005c97;
+    font-size: 1.3rem;
+  }
+
+  .profil-actions {
+    margin-top: 2rem;
+  }
+
+  .btn-profil {
+    background: #005c97;
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    box-shadow: 0 5px 15px rgba(0, 92, 151, 0.4);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+  }
+
+  .btn-profil:hover {
+    background-color: #003f66;
+    box-shadow: 0 8px 20px rgba(0, 63, 102, 0.7);
+  }
+
+  @media (max-width: 700px) {
+    body {
+      padding: 1rem 1rem;
+    }
+
+    .profil-container {
+      flex-direction: column;
+      padding: 2rem 1rem;
+      gap: 1.5rem;
+      max-width: 100%;
+    }
+
+    .profil-photo {
+      width: 140px;
+      height: 140px;
+      margin-bottom: 1rem;
+      border-width: 4px;
+    }
+
+    .profil-details {
+      min-width: auto;
+      text-align: center;
+    }
+
+    .profil-details h2 {
+      font-size: 2rem;
+    }
+
+    .profil-details p {
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .profil-details p strong {
+      min-width: auto;
+    }
+
+    .profil-details p i {
+      font-size: 1.1rem;
+    }
+
+    .profil-actions {
+      margin-top: 1.5rem;
+    }
+
+    .btn-profil {
+      width: 100%;
+      justify-content: center;
+      font-size: 1rem;
+      padding: 0.75rem 1rem;
+    }
+  }
+</style>
+
+<div class="profil-container">
+  {% if user.profile and user.profile.photo %}
+    <img src="{{ user.profile.photo.url }}" alt="Photo de profil" class="profil-photo">
+  {% else %}
+    <img src="{% static 'images/default-avatar.png' %}" alt="Profil par défaut" class="profil-photo">
+  {% endif %}
+
+  <div class="profil-details">
+    <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+
+    <p><i class="bi bi-envelope-fill"></i><strong>Email :</strong> {{ user.email }}</p>
+    <p><i class="bi bi-person-fill"></i><strong>Nom d'utilisateur :</strong> {{ user.username }}</p>
+    <p><i class="bi bi-calendar-check-fill"></i><strong>Inscrit le :</strong> {{ user.date_joined|date:"d/m/Y" }}</p>
+
+    {% if user.profile %}
+      <p><i class="bi bi-gender-ambiguous"></i><strong>Sexe :</strong> {{ user.profile.get_sexe_display|default:"-" }}</p>
+      <p><i class="bi bi-calendar-date"></i><strong>Date de naissance :</strong> {{ user.profile.date_naissance|date:"d/m/Y"|default:"-" }}</p>
+      <p><i class="bi bi-hourglass-split"></i><strong>Âge :</strong> {{ user.profile.age|default:"-" }} ans</p>
+      <p><i class="bi bi-geo-alt-fill"></i><strong>Ville :</strong> {{ user.profile.ville|default:"-" }}</p>
+      {% if user.profile.profession %}
+        <p><i class="bi bi-briefcase-fill"></i><strong>Profession :</strong> {{ user.profile.profession }}</p>
+      {% endif %}
+      {% if user.profile.telephone %}
+        <p><i class="bi bi-telephone-fill"></i><strong>Téléphone :</strong> {{ user.profile.telephone }}</p>
+      {% endif %}
+      {% if user.profile.bio %}
+        <p><i class="bi bi-chat-left-text-fill"></i><strong>Bio :</strong> {{ user.profile.bio }}</p>
+      {% endif %}
+    {% endif %}
+
+    <div class="profil-actions">
+      <a href="{% url 'accounts:modifier_profil_citoyen' %}" class="btn-profil">
+        <i class="bi bi-pencil-fill"></i> Modifier mon profil
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

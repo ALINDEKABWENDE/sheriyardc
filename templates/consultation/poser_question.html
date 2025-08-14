@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% load widget_tweaks %}  {# <-- nécessaire pour add_class #}
+
+{% block title %}Poser une question{% endblock %}
+
+{% block content %}
+<style>
+  /* ==== Arrière-plan général ==== */
+  body {
+    background: linear-gradient(135deg, #eef4f9, #ffffff);
+    font-family: 'Segoe UI', Roboto, sans-serif;
+  }
+
+  /* ==== Titre ==== */
+  h2.text-primary {
+    font-weight: 600;
+    text-align: center;
+    background: linear-gradient(90deg, #0d6efd, #0dcaf0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* ==== Carte du formulaire ==== */
+  .form-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .form-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  }
+
+  /* ==== Labels ==== */
+  .form-label {
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+
+  /* ==== Champs ==== */
+  .form-control,
+  .form-select {
+    border-radius: 8px;
+    padding: 10px 12px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .form-control:focus,
+  .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 5px rgba(13,110,253,0.25);
+  }
+
+  /* ==== Bouton ==== */
+  .btn-primary {
+    background: linear-gradient(90deg, #0d6efd, #0dcaf0);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 1rem;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  .btn-primary:hover {
+    background: linear-gradient(90deg, #0b5ed7, #0bb1d4);
+    transform: scale(1.02);
+  }
+
+  /* ==== Alertes ==== */
+  .alert-danger {
+    border-radius: 8px;
+    padding: 10px;
+  }
+
+  /* ==== Responsive ==== */
+  @media (max-width: 576px) {
+    .form-card {
+      padding: 18px;
+    }
+    h2.text-primary {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+
+<div class="container mt-4">
+  <h2 class="mb-4 text-primary">💬 Poser une question juridique</h2>
+
+  <form method="post" action="{% url 'citoyen:poser_question' %}" class="form-card">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger">
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+
+    <div class="mb-3">
+      <label for="objet" class="form-label">Objet de la question</label>
+      {{ form.objet|add_class:"form-control" }}
+      {{ form.objet.errors }}
+    </div>
+
+    <div class="mb-3">
+      <label for="contenu" class="form-label">Contenu</label>
+      {{ form.contenu|add_class:"form-control" }}
+      {{ form.contenu.errors }}
+    </div>
+
+    <div class="mb-3">
+      <label for="categorie" class="form-label">Catégorie</label>
+      {{ form.categorie|add_class:"form-select" }}
+      {{ form.categorie.errors }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+      <i class="bi bi-send"></i> Envoyer la question
+    </button>
+  </form>
+</div>
+{% endblock %}

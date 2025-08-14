@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+  body {
+    background-color: #f7f9fc;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    color: #333;
+  }
+
+  .header-box {
+    background: linear-gradient(120deg, #004080, #007acc);
+    color: white;
+    padding: 30px 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    text-align: center;
+  }
+  .header-box h2 {
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .header-box p {
+    font-size: 1.1rem;
+    opacity: 0.85;
+  }
+
+  .stat-card {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    background-color: white;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .stat-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  }
+  .stat-card h6 {
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 0.5rem;
+  }
+  .stat-card h3 {
+    font-weight: 700;
+  }
+
+  .btn-group .btn {
+    font-weight: 600;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-primary {
+    background-color: #0056b3;
+    border-color: #0056b3;
+  }
+  .btn-primary:hover {
+    background-color: #004494;
+    border-color: #004494;
+  }
+
+  .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+  }
+
+  .btn-outline-info:hover {
+    background-color: #17a2b8;
+    color: white;
+  }
+
+  .card-header {
+    font-weight: 700;
+    background-color: #003366;
+    color: white;
+    font-size: 1.1rem;
+  }
+
+  .list-group-item {
+    font-size: 1rem;
+    padding: 15px 20px;
+  }
+
+  .footer {
+    margin-top: 50px;
+    padding: 15px 0;
+    text-align: center;
+    color: #666;
+    font-size: 0.9rem;
+    font-style: italic;
+    border-top: 1px solid #ddd;
+  }
+
+  @media (max-width: 767px) {
+    .btn-group {
+      flex-wrap: wrap;
+    }
+    .btn-group .btn {
+      margin-bottom: 10px !important;
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>
+
+<div class="container-fluid mt-4">
+
+  <!-- 🧑‍⚖️ En-tête -->
+  <div class="row mb-4">
+    <div class="col-12 header-box">
+      <h2>Bienvenue Maître <strong>{{ user.username }}</strong></h2>
+      <p>Rôle : <strong>{{ user.profile.role }}</strong></p>
+    </div>
+  </div>
+
+  <!-- 📊 Statistiques -->
+  <div class="row text-center">
+    {% for stat in stats %}
+    <div class="col-md-3 col-sm-6 mb-4">
+      <div class="stat-card">
+        <h6>{{ stat.label }}</h6>
+        <h3 class="text-{{ stat.color }}">{{ stat.value }}</h3>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- ⚙️ Actions -->
+  <div class="row mb-5">
+    <div class="col-12 d-flex justify-content-center btn-group" role="group" aria-label="Actions juriste">
+      <a href="{% url 'dossiers:creer_dossier' %}" class="btn btn-primary me-3">
+        <i class="bi bi-folder-plus"></i> Nouveau Dossier
+      </a>
+      <a href="{% url 'documents:upload_document' %}" class="btn btn-outline-secondary me-3">
+        <i class="bi bi-upload"></i> Ajouter Document
+      </a>
+      <a href="{% url 'actualites:liste_actualites' %}" class="btn btn-outline-info">
+        <i class="bi bi-newspaper"></i> Actualités
+      </a>
+    </div>
+  </div>
+
+  <!-- 📁 Documents récents -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header">📁 Documents récents</div>
+        <ul class="list-group list-group-flush">
+          {% if documents %}
+            {% for doc in documents %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>{{ doc.titre }}</span>
+              <a href="{{ doc.url }}" class="btn btn-sm btn-outline-dark" target="_blank" rel="noopener noreferrer">
+                Télécharger
+              </a>
+            </li>
+            {% endfor %}
+          {% else %}
+            <li class="list-group-item text-center text-muted">Aucun document disponible</li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 📈 Graphiques -->
+  <div class="row mb-5">
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-header">📊 Dossiers par statut</div>
+        <div class="card-body">
+          <canvas id="chartDossiers" aria-label="Graphique des dossiers par statut" role="img"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-header">⏱️ Connexions</div>
+        <div class="card-body">
+          <canvas id="chartConnexions" aria-label="Graphique des connexions" role="img"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🧾 Pied de page -->
+  <footer class="footer">
+    Plateforme institutionnelle — 🇨🇩 RDC, pour la Justice, l’Excellence et l’Impact
+  </footer>
+
+</div>
+{% endblock %}

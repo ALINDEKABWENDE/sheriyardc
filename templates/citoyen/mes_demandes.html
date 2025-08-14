@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}Mes demandes{% endblock %}
+
+{% block content %}
+<style>
+/* ==== Arrière-plan cohérent avec page d'accueil ==== */
+body {
+    background: linear-gradient(135deg, #e0f2f1, #f1f8ff);
+    font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ==== Conteneur principal ==== */
+.container-demandes {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+/* ==== Titre ==== */
+.container-demandes h2 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    background: linear-gradient(90deg, #007BFF, #00c6ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ==== Formulaire ==== */
+.form-control, .form-select {
+    border-radius: 10px;
+    border: 1px solid #d0d7de;
+    padding: 10px;
+}
+
+.btn-custom {
+    border-radius: 10px;
+    padding: 10px;
+    transition: 0.3s;
+    background: linear-gradient(90deg, #007BFF, #00c6ff);
+    color: white;
+    border: none;
+}
+.btn-custom:hover {
+    transform: scale(1.05);
+    background: linear-gradient(90deg, #0056b3, #0099cc);
+}
+
+/* ==== Tableau ==== */
+.table {
+    background-color: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+.table thead {
+    background: linear-gradient(90deg, #007BFF, #00c6ff);
+    color: white;
+}
+.table tbody tr:hover {
+    background-color: #f1f8ff;
+    transition: background 0.3s;
+}
+
+/* ==== Badges ==== */
+.badge {
+    font-size: 0.85rem;
+    border-radius: 8px;
+}
+
+/* ==== Pagination ==== */
+.pagination .page-link {
+    border-radius: 8px;
+    margin: 0 3px;
+    color: #007BFF;
+    border: 1px solid #d0d7de;
+}
+.pagination .page-item.active .page-link {
+    background-color: #007BFF;
+    border-color: #007BFF;
+    color: white;
+}
+.pagination .page-link:hover {
+    background-color: #00c6ff;
+    color: white;
+}
+</style>
+
+<div class="container container-demandes mt-4">
+  <h2>📋 Mes demandes</h2>
+
+  <!-- Barre de recherche et filtres -->
+  <form method="get" class="row g-3 mb-4">
+    <div class="col-md-4">
+      <input type="text" name="q" class="form-control" placeholder="🔍 Rechercher une demande...">
+    </div>
+    <div class="col-md-3">
+      <select name="statut" class="form-select">
+        <option value="">Tous les statuts</option>
+        <option value="en_attente">En attente</option>
+        <option value="traitée">Traitée</option>
+        <option value="rejetée">Rejetée</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-custom w-100">Filtrer</button>
+    </div>
+  </form>
+
+  <!-- Tableau des demandes -->
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Objet</th>
+          <th>Date</th>
+          <th>Statut</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for demande in demandes %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ demande.objet }}</td>
+          <td>{{ demande.date_creation|date:"d/m/Y" }}</td>
+          <td>
+            {% if demande.statut == "en_attente" %}
+              <span class="badge bg-warning text-dark">En attente</span>
+            {% elif demande.statut == "traitée" %}
+              <span class="badge bg-success">Traitée</span>
+            {% elif demande.statut == "rejetée" %}
+              <span class="badge bg-danger">Rejetée</span>
+            {% else %}
+              <span class="badge bg-secondary">Inconnu</span>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'consultation:detail_demande' demande.id %}" class="btn btn-sm btn-outline-info">
+              Détails
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="text-center text-muted">Aucune demande trouvée.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  {% if is_paginated %}
+  <nav aria-label="Pagination">
+    <ul class="pagination justify-content-center">
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+        </li>
+      {% endif %}
+      {% for num in paginator.page_range %}
+        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+          <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+      {% endfor %}
+      {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+{% endblock %}
